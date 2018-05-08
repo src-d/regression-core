@@ -98,7 +98,7 @@ func (r *Repositories) Download() error {
 
 		err = downloadRepo(logger, repo.URL, path)
 		if err != nil {
-			logger.Error(err, "Could not download repository")
+			logger.Errorf(err, "Could not download repository")
 			return err
 		}
 	}
@@ -137,14 +137,14 @@ func downloadRepo(l log.Logger, url, path string) error {
 
 	clone, err := NewExecutor("git", "clone", "--bare", url, downloadPath)
 	if err != nil {
-		l.Error(err, "Could not create executor")
+		l.Errorf(err, "Could not create executor")
 		return err
 	}
 
 	err = clone.Run()
 	if err != nil {
 		out, _ := clone.Out()
-		l.New(log.Fields{"output": out}).Error(err, "Could not execute git clone")
+		l.New(log.Fields{"output": out}).Errorf(err, "Could not execute git clone")
 		return err
 	}
 

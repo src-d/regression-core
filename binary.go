@@ -96,7 +96,7 @@ func (b *Binary) Download() error {
 	log.Debugf("Dowloading version %s", b.Version)
 	err = b.downloadRelease()
 	if err != nil {
-		log.Error(err, "Could not download version %s", b.Version)
+		log.Errorf(err, "Could not download version %s", b.Version)
 		return err
 	}
 
