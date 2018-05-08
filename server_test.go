@@ -45,4 +45,9 @@ func TestServer(t *testing.T) {
 	err = server.Stop()
 	require.NoError(err)
 	require.False(server.Alive())
+
+	rusage := server.Rusage()
+	require.NotNil(rusage)
+	require.True(rusage.Stime.Nano()+rusage.Utime.Nano() > 0)
+	require.True(rusage.Maxrss > 0)
 }
