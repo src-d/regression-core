@@ -8,6 +8,7 @@ import (
 	log "gopkg.in/src-d/go-log.v0"
 )
 
+// RepoDescription holds the information about a single repository
 type RepoDescription struct {
 	Name        string
 	URL         string
@@ -54,18 +55,29 @@ var defaultRepos = []RepoDescription{
 	},
 }
 
+// Repositories struct has the information about a set of repositories and
+// functionality to download them.
 type Repositories struct {
 	repos  []RepoDescription
 	config Config
 }
 
-func NewRepositories(config Config) *Repositories {
+// NewDefaultRepositories creates a new Repositories with default set.
+// hardcoded.
+func NewDefaultRepositories(config Config) *Repositories {
+	return NewRepositories(config, defaultRepos)
+}
+
+// NewRepositories creates a new Repositories set.
+func NewRepositories(config Config, repos []RepoDescription) *Repositories {
 	return &Repositories{
-		repos:  defaultRepos,
+		repos:  repos,
 		config: config,
 	}
 }
 
+// Download clones all repositories in the list that have equal or lower
+// complexity specified in config.
 func (r *Repositories) Download() error {
 	for _, repo := range r.repos {
 		if repo.Complexity > r.config.Complexity {
@@ -106,19 +118,43 @@ func (r *Repositories) Download() error {
 	return nil
 }
 
+// Path returns the repository cache path.
 func (r *Repositories) Path() string {
 	return r.config.RepositoriesCache
 }
 
-func (r *Repositories) Names(complexity int) []string {
+// Names returns the names of repositories withing concurrency level.
+func (r *Repositories) Names() []string {
 	names := make([]string, 0, len(r.repos))
 	for _, repo := range r.repos {
-		if repo.Complexity <= complexity {
+		if repo.Complexity <= r.config.Complexity {
 			names = append(names, repo.Name)
 		}
 	}
 
 	return names
+}
+
+// LinksDir returns a path of a temporary directory with repos within
+// the config complexity.
+func (r *Repositories) LinksDir() (string, error) {
+	dir, err := createTempDir()
+	if err != nil {
+		return "", err
+	}
+
+	for _, name := range r.Names() {
+		from := filepath.Join(r.config.RepositoriesCache, name)
+		to := filepath.Join(dir, name)
+
+		err = recursiveCopy(from, to)
+		if err != nil {
+			os.RemoveAll(dir)
+			return "", err
+		}
+	}
+
+	return dir, err
 }
 
 func downloadRepo(l log.Logger, url, path string) error {
@@ -152,6 +188,7 @@ func downloadRepo(l log.Logger, url, path string) error {
 	return err
 }
 
+// ShowRepos prints information about all repositories.
 func (r *Repositories) ShowRepos() {
 	for _, repo := range r.repos {
 		fmt.Printf("* Name: %s\n", repo.Name)

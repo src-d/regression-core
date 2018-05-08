@@ -2,7 +2,6 @@ package regression
 
 import (
 	"fmt"
-	"io"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -125,7 +124,7 @@ func (b *Binary) downloadRelease() error {
 	defer os.RemoveAll(path)
 
 	binary := filepath.Join(path, b.dirName(), b.tool.Name)
-	err = copyBinary(binary, b.cacheName())
+	err = copyFile(binary, b.cacheName(), 0755)
 
 	return err
 }
@@ -157,41 +156,4 @@ func fileExist(path string) (bool, error) {
 	}
 
 	return true, nil
-}
-
-func copyBinary(source, destination string) error {
-	exist, err := fileExist(source)
-	if err != nil {
-		return err
-	}
-	if !exist {
-		return ErrBinaryNotFound.New()
-	}
-
-	orig, err := os.Open(source)
-	if err != nil {
-		return err
-	}
-
-	dir := filepath.Dir(destination)
-	err = os.MkdirAll(dir, 0755)
-	if err != nil {
-		return err
-	}
-
-	dst, err := os.Create(destination)
-	if err != nil {
-		return err
-	}
-	dst.Chmod(0755)
-	defer dst.Close()
-
-	_, err = io.Copy(dst, orig)
-	if err != nil {
-		dst.Close()
-		os.Remove(dst.Name())
-		return err
-	}
-
-	return nil
 }
