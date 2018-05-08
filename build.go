@@ -205,7 +205,7 @@ func (b *Build) copyBinary() error {
 	source := filepath.Join(b.projectPath(), buildDir, b.tool.Name)
 	destination := b.binaryPath()
 
-	return copyBinary(source, destination)
+	return copyFile(source, destination, 0755)
 }
 
 func (b *Build) projectPath() string {
