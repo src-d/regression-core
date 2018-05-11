@@ -1,8 +1,10 @@
 package regression
 
 import (
+	"os"
 	"os/exec"
 	"syscall"
+	"time"
 )
 
 // Server struct describes a daemon.
@@ -17,9 +19,17 @@ func NewServer() *Server {
 
 // Start executes a command in background.
 func (s *Server) Start(name string, arg ...string) error {
+	println("name", name, arg[0])
 	s.cmd = exec.Command(name, arg...)
+	s.cmd.Stdout = os.Stdout
+	s.cmd.Stderr = os.Stderr
 
-	return s.cmd.Start()
+	err := s.cmd.Start()
+
+	// TODO: check that the server is ready (read stdout?)
+	time.Sleep(1 * time.Second)
+
+	return err
 }
 
 // Stop kill the daemon.

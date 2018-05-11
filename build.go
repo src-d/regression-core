@@ -179,11 +179,12 @@ func (b *Build) download() (bool, error) {
 }
 
 func (b *Build) build() error {
-	cmd := exec.Command("make", "packages")
+	cmd := exec.Command("make", "dependencies", "packages")
 	cmd.Dir = b.projectPath()
 	cmd.Env = []string{
 		fmt.Sprintf("GOPATH=%s", b.GoPath),
 		fmt.Sprintf("PWD=%s", cmd.Dir),
+		fmt.Sprintf("PATH=%s", os.Getenv("PATH")),
 		fmt.Sprintf("HOME=%s", os.Getenv("HOME")),
 		"PKG_OS=linux",
 	}
