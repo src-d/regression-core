@@ -33,6 +33,12 @@ func NewConfig() Config {
 	}
 }
 
+type BuildStep struct {
+	Dir     string
+	Command string
+	Args    []string
+}
+
 type Tool struct {
 	// Name has the tool name that is the same as the executable name.
 	Name string
@@ -41,6 +47,8 @@ type Tool struct {
 	// ProjectPath is the directory structure inside GOPATH/src where it should
 	// be located for building.
 	ProjectPath string
+	// BuildSteps has the commands needed to build the tool.
+	BuildSteps []BuildStep
 }
 
 func (t Tool) DirName(os string) string {

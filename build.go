@@ -95,9 +95,13 @@ func (b *Build) Build() (string, error) {
 		return b.binaryPath(), nil
 	}
 
-	err = b.build()
-	if err != nil {
-		return "", err
+	log.Infof("Building packages")
+
+	for _, step := range b.tool.BuildSteps {
+		err = b.buildStep(step)
+		if err != nil {
+			return "", err
+		}
 	}
 
 	err = b.copyBinary()
@@ -178,9 +182,9 @@ func (b *Build) download() (bool, error) {
 	return true, err
 }
 
-func (b *Build) build() error {
-	cmd := exec.Command("make", "dependencies", "packages")
-	cmd.Dir = b.projectPath()
+func (b *Build) buildStep(step BuildStep) error {
+	cmd := exec.Command(step.Command, step.Args...)
+	cmd.Dir = filepath.Join(b.projectPath(), step.Dir)
 	cmd.Env = []string{
 		fmt.Sprintf("GOPATH=%s", b.GoPath),
 		fmt.Sprintf("PWD=%s", cmd.Dir),
@@ -190,8 +194,6 @@ func (b *Build) build() error {
 	}
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
-
-	log.Infof("Building packages")
 
 	err := cmd.Run()
 	if err != nil {
