@@ -39,6 +39,12 @@ func (s *Server) Stop() error {
 		return err
 	}
 
+	time.AfterFunc(3*time.Second, func() {
+		if s.Alive() {
+			s.cmd.Process.Signal(syscall.Signal(9))
+		}
+	})
+
 	_ = s.cmd.Wait()
 	return nil
 }
