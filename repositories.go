@@ -171,7 +171,7 @@ func downloadRepo(l log.Logger, url, path string) error {
 		}
 	}
 
-	clone, err := NewExecutor("git", "clone", "--bare", url, downloadPath)
+	clone, err := NewExecutor("git", "clone", "--mirror", url, downloadPath)
 	if err != nil {
 		l.Errorf(err, "Could not create executor")
 		return err
