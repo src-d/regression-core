@@ -2,18 +2,20 @@ package regression
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 
-	log "gopkg.in/src-d/go-log.v0"
+	"github.com/ghodss/yaml"
+	"gopkg.in/src-d/go-log.v0"
 )
 
 // RepoDescription holds the information about a single repository
 type RepoDescription struct {
-	Name        string
-	URL         string
-	Description string
-	Complexity  int
+	Name        string `json:"name"`
+	URL         string `json:"url"`
+	Description string `json:"description"`
+	Complexity  int    `json:"complexity"`
 }
 
 var defaultRepos = []RepoDescription{
@@ -58,7 +60,7 @@ var defaultRepos = []RepoDescription{
 // Repositories struct has the information about a set of repositories and
 // functionality to download them.
 type Repositories struct {
-	repos  []RepoDescription
+	Repos  []RepoDescription
 	config Config
 }
 
@@ -68,10 +70,39 @@ func NewDefaultRepositories(config Config) *Repositories {
 	return NewRepositories(config, defaultRepos)
 }
 
+// NewRepositoriesFromYaml creates a new Repositories struct loading the list
+// of repos from a yaml file.
+func NewRepositoriesFromYaml(
+	config Config,
+	file string,
+) (*Repositories, error) {
+	repos, err := loadReposYaml(file)
+	if err != nil {
+		return nil, err
+	}
+
+	return NewRepositories(config, repos), nil
+}
+
+func loadReposYaml(file string) ([]RepoDescription, error) {
+	text, err := ioutil.ReadFile(file)
+	if err != nil {
+		return nil, err
+	}
+
+	var repos []RepoDescription
+	err = yaml.Unmarshal(text, &repos)
+	if err != nil {
+		return nil, err
+	}
+
+	return repos, nil
+}
+
 // NewRepositories creates a new Repositories set.
 func NewRepositories(config Config, repos []RepoDescription) *Repositories {
 	return &Repositories{
-		repos:  repos,
+		Repos:  repos,
 		config: config,
 	}
 }
@@ -79,7 +110,7 @@ func NewRepositories(config Config, repos []RepoDescription) *Repositories {
 // Download clones all repositories in the list that have equal or lower
 // complexity specified in config.
 func (r *Repositories) Download() error {
-	for _, repo := range r.repos {
+	for _, repo := range r.Repos {
 		if repo.Complexity > r.config.Complexity {
 			continue
 		}
@@ -125,8 +156,8 @@ func (r *Repositories) Path() string {
 
 // Names returns the names of repositories withing concurrency level.
 func (r *Repositories) Names() []string {
-	names := make([]string, 0, len(r.repos))
-	for _, repo := range r.repos {
+	names := make([]string, 0, len(r.Repos))
+	for _, repo := range r.Repos {
 		if repo.Complexity <= r.config.Complexity {
 			names = append(names, repo.Name)
 		}
@@ -190,7 +221,7 @@ func downloadRepo(l log.Logger, url, path string) error {
 
 // ShowRepos prints information about all repositories.
 func (r *Repositories) ShowRepos() {
-	for _, repo := range r.repos {
+	for _, repo := range r.Repos {
 		fmt.Printf("* Name: %s\n", repo.Name)
 		fmt.Printf("  URL: %s\n", repo.URL)
 		fmt.Printf("  Complexity: %d\n", repo.Complexity)
