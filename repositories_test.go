@@ -44,3 +44,37 @@ func TestRepositories(t *testing.T) {
 		require.Equal(r[i].Name(), link.Name())
 	}
 }
+
+var repositoriesExamples = []RepoDescription{
+	{
+		Name:        "name",
+		URL:         "url",
+		Description: "description",
+		Complexity:  0,
+	}, {
+
+		Name:        "go-git",
+		URL:         "git://github.com/src-d/go-git",
+		Description: "go-git repository",
+		Complexity:  2,
+	}, {
+		Name: "kernel",
+		URL:  "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git",
+		Description: `very
+long
+description
+`,
+		Complexity: 10,
+	},
+}
+
+func TestRepositoriesYaml(t *testing.T) {
+	require := require.New(t)
+
+	config := NewConfig()
+	r, err := NewRepositoriesFromYaml(config, "testdata/repositories.yaml")
+	require.NoError(err)
+	require.NotNil(r)
+
+	require.Equal(repositoriesExamples, r.Repos)
+}

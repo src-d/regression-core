@@ -1,0 +1,19 @@
+---
+- name: name
+  url: url
+  description: description
+  complexity: 0
+
+- name: go-git
+  url: git://github.com/src-d/go-git
+  description: go-git repository
+  complexity: 2
+
+- name: kernel
+  url: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+  description: |
+    very
+    long
+    description
+  complexity: 10
+
