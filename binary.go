@@ -8,7 +8,7 @@ import (
 
 	"github.com/alcortesm/tgz"
 	errors "gopkg.in/src-d/go-errors.v0"
-	log "gopkg.in/src-d/go-log.v0"
+	log "gopkg.in/src-d/go-log.v1"
 )
 
 var regRelease = regexp.MustCompile(`^v\d+\.\d+\.\d+$`)

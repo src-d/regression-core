@@ -5,7 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
-	log "gopkg.in/src-d/go-log.v0"
+	log "gopkg.in/src-d/go-log.v1"
 )
 
 // RepoDescription holds the information about a single repository
@@ -84,8 +84,7 @@ func (r *Repositories) Download() error {
 			continue
 		}
 
-		logger, _ := log.New()
-		logger = logger.New(log.Fields{"name": repo.Name})
+		logger := log.New(log.Fields{"name": repo.Name})
 
 		path := filepath.Join(r.config.RepositoriesCache, repo.Name)
 		exist, err := fileExist(path)
