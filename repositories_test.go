@@ -21,8 +21,9 @@ func TestRepositories(t *testing.T) {
 	config.RepositoriesCache = tmpDir
 	config.Complexity = 0
 
-	repos := NewDefaultRepositories(config)
+	repos, err := NewRepositories(config)
 	require.NotNil(repos)
+	require.NoError(err)
 	require.Equal(config, repos.config)
 	require.Equal(tmpDir, repos.Path())
 
@@ -72,7 +73,8 @@ func TestRepositoriesYaml(t *testing.T) {
 	require := require.New(t)
 
 	config := NewConfig()
-	r, err := NewRepositoriesFromYaml(config, "testdata/repositories.yaml")
+	config.RepositoriesFile = "testdata/repositories.yaml"
+	r, err := NewRepositories(config)
 	require.NoError(err)
 	require.NotNil(r)
 

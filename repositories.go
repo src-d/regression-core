@@ -64,47 +64,24 @@ type Repositories struct {
 	config Config
 }
 
-// NewDefaultRepositories creates a new Repositories with default set.
-// hardcoded.
-func NewDefaultRepositories(config Config) *Repositories {
-	return NewRepositories(config, defaultRepos)
-}
+// NewRepositories creates a new Repositories set. If config.RepositoriesFile
+// is set it will try to load it and use as a load it as the repositories
+// list.
+func NewRepositories(config Config) (*Repositories, error) {
+	repos := defaultRepos
 
-// NewRepositoriesFromYaml creates a new Repositories struct loading the list
-// of repos from a yaml file.
-func NewRepositoriesFromYaml(
-	config Config,
-	file string,
-) (*Repositories, error) {
-	repos, err := loadReposYaml(file)
-	if err != nil {
-		return nil, err
+	if config.RepositoriesFile != "" {
+		var err error
+		repos, err = loadReposYaml(config.RepositoriesFile)
+		if err != nil {
+			return nil, err
+		}
 	}
 
-	return NewRepositories(config, repos), nil
-}
-
-func loadReposYaml(file string) ([]RepoDescription, error) {
-	text, err := ioutil.ReadFile(file)
-	if err != nil {
-		return nil, err
-	}
-
-	var repos []RepoDescription
-	err = yaml.Unmarshal(text, &repos)
-	if err != nil {
-		return nil, err
-	}
-
-	return repos, nil
-}
-
-// NewRepositories creates a new Repositories set.
-func NewRepositories(config Config, repos []RepoDescription) *Repositories {
 	return &Repositories{
 		Repos:  repos,
 		config: config,
-	}
+	}, nil
 }
 
 // Download clones all repositories in the list that have equal or lower
@@ -187,6 +164,15 @@ func (r *Repositories) LinksDir() (string, error) {
 	return dir, err
 }
 
+// ShowRepos prints information about all repositories.
+func (r *Repositories) ShowRepos() {
+	for _, repo := range r.Repos {
+		fmt.Printf("* Name: %s\n", repo.Name)
+		fmt.Printf("  URL: %s\n", repo.URL)
+		fmt.Printf("  Complexity: %d\n", repo.Complexity)
+	}
+}
+
 func downloadRepo(l log.Logger, url, path string) error {
 	downloadPath := fmt.Sprintf("%s.download", path)
 	exist, err := fileExist(downloadPath)
@@ -218,11 +204,17 @@ func downloadRepo(l log.Logger, url, path string) error {
 	return err
 }
 
-// ShowRepos prints information about all repositories.
-func (r *Repositories) ShowRepos() {
-	for _, repo := range r.Repos {
-		fmt.Printf("* Name: %s\n", repo.Name)
-		fmt.Printf("  URL: %s\n", repo.URL)
-		fmt.Printf("  Complexity: %d\n", repo.Complexity)
+func loadReposYaml(file string) ([]RepoDescription, error) {
+	text, err := ioutil.ReadFile(file)
+	if err != nil {
+		return nil, err
 	}
+
+	var repos []RepoDescription
+	err = yaml.Unmarshal(text, &repos)
+	if err != nil {
+		return nil, err
+	}
+
+	return repos, nil
 }

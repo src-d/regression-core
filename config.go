@@ -19,6 +19,8 @@ type Config struct {
 	GitURL string `env:"REG_GITURL" default:"" long:"url" description:"URL to the tool repo"`
 	// GitServerPort is the port where the local git server will listen
 	GitServerPort int `env:"REG_GITPORT" default:"9418" long:"gitport" description:"Port for local git server"`
+	// RepositoriesFile
+	RepositoriesFile string `env:"REG_REPOS_FILE" default:"" long:"repos-file" description:"YAML file with the list of repos"`
 	// Complexity has the max number of complexity of repos to test
 	Complexity int `env:"REG_COMPLEXITY" default:"1" long:"complexity" short:"c" description:"Complexity of the repositories to test"`
 	// Repeat is the number of times each test will be run
