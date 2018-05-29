@@ -23,6 +23,9 @@ func (s *Server) Start(name string, arg ...string) error {
 	s.cmd = exec.Command(name, arg...)
 	s.cmd.Stdout = os.Stdout
 	s.cmd.Stderr = os.Stderr
+	s.cmd.SysProcAttr = &syscall.SysProcAttr{
+		Setpgid: true,
+	}
 
 	err := s.cmd.Start()
 
@@ -34,14 +37,14 @@ func (s *Server) Start(name string, arg ...string) error {
 
 // Stop kill the daemon.
 func (s *Server) Stop() error {
-	err := s.cmd.Process.Kill()
+	err := syscall.Kill(-s.cmd.Process.Pid, syscall.SIGTERM)
 	if err != nil {
 		return err
 	}
 
 	time.AfterFunc(3*time.Second, func() {
 		if s.Alive() {
-			s.cmd.Process.Signal(syscall.Signal(9))
+			s.cmd.Process.Signal(syscall.SIGKILL)
 		}
 	})
 

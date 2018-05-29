@@ -20,7 +20,7 @@ func (s *GitServer) Start() error {
 	basePath := fmt.Sprintf("--base-path=%s", s.config.RepositoriesCache)
 	port := fmt.Sprintf("--port=%d", s.config.GitServerPort)
 
-	arg := []string{"daemon", "--reuseaddr", basePath, port,
+	arg := []string{"daemon", basePath, port,
 		"--export-all", s.config.RepositoriesCache}
 
 	return s.Server.Start("git", arg...)

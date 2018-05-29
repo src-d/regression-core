@@ -35,6 +35,7 @@ func TestServer(t *testing.T) {
 
 	config := NewConfig()
 	config.RepositoriesCache = fmt.Sprintf("%s/src/github.com/src-d", gopath)
+	config.GitServerPort = 9418
 
 	server := NewGitServer(config)
 
