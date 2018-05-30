@@ -19,7 +19,6 @@ func NewServer() *Server {
 
 // Start executes a command in background.
 func (s *Server) Start(name string, arg ...string) error {
-	println("name", name, arg[0])
 	s.cmd = exec.Command(name, arg...)
 	s.cmd.Stdout = os.Stdout
 	s.cmd.Stderr = os.Stderr
