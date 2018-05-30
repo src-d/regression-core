@@ -7,11 +7,11 @@ import (
 	"path/filepath"
 	"regexp"
 
-	"gopkg.in/src-d/go-errors.v0"
+	"gopkg.in/src-d/go-errors.v1"
 	"gopkg.in/src-d/go-git.v4"
 	"gopkg.in/src-d/go-git.v4/config"
 	"gopkg.in/src-d/go-git.v4/plumbing"
-	log "gopkg.in/src-d/go-log.v1"
+	"gopkg.in/src-d/go-log.v1"
 )
 
 // Build structure holds information and functionality to generate
