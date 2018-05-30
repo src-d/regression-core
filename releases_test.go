@@ -14,14 +14,21 @@ func TestReleases(t *testing.T) {
 	require.NoError(err)
 	defer os.RemoveAll(dir)
 
-	r := NewReleases("src-d", "borges")
+	token := os.Getenv("REG_TOKEN")
+
+	r := NewReleases("src-d", "borges", token)
 	require.NotNil(r)
 	require.Nil(r.repoReleases)
 
 	path := filepath.Join(dir, "invalid_version")
 	err = r.Get("invalid_version", "invalid_asset", path)
 	require.Error(err)
-	require.True(ErrVersionNotFound.Is(err))
+
+	if !ErrVersionNotFound.Is(err) {
+		t.Errorf("the error should be invalid version but is: %v", err)
+		t.FailNow()
+	}
+
 	require.False(fileExist(path))
 
 	list := r.repoReleases

@@ -8,6 +8,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"golang.org/x/oauth2"
 	"gopkg.in/google/go-github.v15/github"
 	"gopkg.in/src-d/go-errors.v1"
 )
@@ -27,12 +28,25 @@ type Releases struct {
 	repoReleases []*github.RepositoryRelease
 }
 
-func NewReleases(owner, repo string) *Releases {
+func NewReleases(owner, repo, token string) *Releases {
 	return &Releases{
 		owner:  owner,
 		repo:   repo,
-		client: github.NewClient(nil),
+		client: github.NewClient(oauthClient(token)),
 	}
+}
+
+func oauthClient(token string) *http.Client {
+	if token == "" {
+		return nil
+	}
+
+	ts := oauth2.StaticTokenSource(&oauth2.Token{
+		AccessToken: token,
+	})
+	client := oauth2.NewClient(context.Background(), ts)
+
+	return client
 }
 
 func (r *Releases) Get(version, asset, path string) error {

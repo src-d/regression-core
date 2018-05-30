@@ -25,6 +25,8 @@ type Config struct {
 	Repeat int `env:"REG_REPEAT" default:"3" long:"repeat" short:"n" description:"Number of times a test is run"`
 	// ShowRepos when --show-repos is specified
 	ShowRepos bool `long:"show-repos" description:"List available repositories to test"`
+	// GitHubToken specifies the token to use to use GitHub API
+	GitHubToken string `env:"REG_TOKEN" long:"token" short:"t" description:"Token used to connect to the API"`
 }
 
 func NewConfig() Config {
