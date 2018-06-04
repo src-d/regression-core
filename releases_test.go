@@ -10,11 +10,15 @@ import (
 
 func TestReleases(t *testing.T) {
 	require := require.New(t)
+
+	token := os.Getenv("REG_TOKEN")
+	if token == "" {
+		t.Skip("REG_TOKEN not provided")
+	}
+
 	dir, err := createTempDir()
 	require.NoError(err)
 	defer os.RemoveAll(dir)
-
-	token := os.Getenv("REG_TOKEN")
 
 	r := NewReleases("src-d", "borges", token)
 	require.NotNil(r)
