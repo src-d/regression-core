@@ -21,8 +21,9 @@ func TestRepositories(t *testing.T) {
 	config.RepositoriesCache = tmpDir
 	config.Complexity = 0
 
-	repos := NewDefaultRepositories(config)
+	repos, err := NewRepositories(config)
 	require.NotNil(repos)
+	require.NoError(err)
 	require.Equal(config, repos.config)
 	require.Equal(tmpDir, repos.Path())
 
@@ -43,4 +44,39 @@ func TestRepositories(t *testing.T) {
 	for i, link := range links {
 		require.Equal(r[i].Name(), link.Name())
 	}
+}
+
+var repositoriesExamples = []RepoDescription{
+	{
+		Name:        "name",
+		URL:         "url",
+		Description: "description",
+		Complexity:  0,
+	}, {
+
+		Name:        "go-git",
+		URL:         "git://github.com/src-d/go-git",
+		Description: "go-git repository",
+		Complexity:  2,
+	}, {
+		Name: "kernel",
+		URL:  "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git",
+		Description: `very
+long
+description
+`,
+		Complexity: 10,
+	},
+}
+
+func TestRepositoriesYaml(t *testing.T) {
+	require := require.New(t)
+
+	config := NewConfig()
+	config.RepositoriesFile = "testdata/repositories.yaml"
+	r, err := NewRepositories(config)
+	require.NoError(err)
+	require.NotNil(r)
+
+	require.Equal(repositoriesExamples, r.Repos)
 }
