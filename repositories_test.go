@@ -11,7 +11,7 @@ import (
 func TestRepositories(t *testing.T) {
 	require := require.New(t)
 
-	tmpDir, err := createTempDir()
+	tmpDir, err := CreateTempDir()
 	require.NoError(err)
 	defer os.RemoveAll(tmpDir)
 
