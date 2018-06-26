@@ -16,7 +16,7 @@ func TestReleases(t *testing.T) {
 		t.Skip("REG_TOKEN not provided")
 	}
 
-	dir, err := createTempDir()
+	dir, err := CreateTempDir()
 	require.NoError(err)
 	defer os.RemoveAll(dir)
 
