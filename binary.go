@@ -99,10 +99,11 @@ func (b *Binary) Download() error {
 		return err
 	}
 
+	b.Path = cacheName
+	b.cacheDir = filepath.Dir(cacheName)
+
 	if exist {
 		log.Debugf("Binary for %s already downloaded", b.Version)
-		b.Path = cacheName
-		b.cacheDir = filepath.Dir(b.Version)
 		return nil
 	}
 
@@ -112,9 +113,6 @@ func (b *Binary) Download() error {
 		log.Errorf(err, "Could not download version %s", b.Version)
 		return err
 	}
-
-	b.Path = cacheName
-	b.cacheDir = filepath.Dir(cacheName)
 
 	return nil
 }
