@@ -25,7 +25,7 @@ func TestReleases(t *testing.T) {
 	require.Nil(r.repoReleases)
 
 	path := filepath.Join(dir, "invalid_version")
-	err = r.Get("invalid_version", "invalid_asset", path)
+	_, err = r.Get("invalid_version", "invalid_asset", path)
 	require.Error(err)
 
 	if !ErrVersionNotFound.Is(err) {
@@ -38,7 +38,7 @@ func TestReleases(t *testing.T) {
 	list := r.repoReleases
 
 	path = filepath.Join(dir, "invalid_asset")
-	err = r.Get("v0.12.0", "invalid_asset", path)
+	_, err = r.Get("v0.12.0", "invalid_asset", path)
 	require.Error(err)
 	require.True(ErrAssetNotFound.Is(err))
 	require.False(fileExist(path))
@@ -46,7 +46,7 @@ func TestReleases(t *testing.T) {
 	require.Exactly(list, r.repoReleases)
 
 	path = filepath.Join(dir, "borges.v0.12.0")
-	err = r.Get("v0.12.0", "borges_v0.12.0_linux_amd64.tar.gz", path)
+	_, err = r.Get("v0.12.0", "borges_v0.12.0_linux_amd64.tar.gz", path)
 	require.NoError(err)
 	require.True(fileExist(path))
 }
