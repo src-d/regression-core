@@ -141,7 +141,7 @@ func (b *Binary) downloadRelease() error {
 	}
 	defer os.RemoveAll(path)
 
-	binary := filepath.Join(path, b.dirName(), b.tool.BinaryName)
+	binary := filepath.Join(path, b.dirName(), b.tool.BinName())
 	err = CopyFile(binary, b.cacheName(), 0755)
 	if err != nil {
 		return err
@@ -168,7 +168,7 @@ func (b *Binary) downloadRelease() error {
 }
 
 func (b *Binary) cacheName() string {
-	return b.config.BinaryPath(b.Version, b.tool.BinaryName)
+	return b.config.BinaryPath(b.Version, b.tool.BinName())
 }
 
 func (b *Binary) tarName() string {

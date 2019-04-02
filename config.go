@@ -79,3 +79,11 @@ type Tool struct {
 func (t Tool) DirName(os string) string {
 	return fmt.Sprintf("%s_%s_amd64", t.Name, os)
 }
+
+func (t Tool) BinName() string {
+	if t.BinaryName == "" {
+		return t.Name
+	}
+
+	return t.BinaryName
+}
