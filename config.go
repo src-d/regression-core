@@ -61,8 +61,10 @@ type BuildStep struct {
 
 // Tool describes a project to build and test.
 type Tool struct {
-	// Name has the tool name that is the same as the executable name.
+	// Name has the tool name.
 	Name string
+	// BinaryName has the executable name of the tool.
+	BinaryName string
 	// GitURL holds the git URL to download the project.
 	GitURL string
 	// ProjectPath is the directory structure inside GOPATH/src where it should
@@ -76,4 +78,12 @@ type Tool struct {
 
 func (t Tool) DirName(os string) string {
 	return fmt.Sprintf("%s_%s_amd64", t.Name, os)
+}
+
+func (t Tool) BinName() string {
+	if t.BinaryName == "" {
+		return t.Name
+	}
+
+	return t.BinaryName
 }

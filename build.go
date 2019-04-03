@@ -272,7 +272,7 @@ func (b *Build) buildStep(step BuildStep) error {
 
 func (b *Build) copyBinary() error {
 	buildDir := filepath.Join("build", b.tool.DirName(b.config.OS))
-	source := filepath.Join(b.projectPath(), buildDir, b.tool.Name)
+	source := filepath.Join(b.projectPath(), buildDir, b.tool.BinName())
 	destination := b.binaryPath()
 
 	return CopyFile(source, destination, 0755)
@@ -306,7 +306,7 @@ func (b *Build) versionPath() string {
 }
 
 func (b *Build) binaryPath() string {
-	return b.config.BinaryPath(b.hash, b.tool.Name)
+	return b.config.BinaryPath(b.hash, b.tool.BinName())
 }
 
 func findReference(
