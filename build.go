@@ -253,6 +253,7 @@ func (b *Build) buildStep(step BuildStep) error {
 	cmd := exec.Command(step.Command, step.Args...)
 	cmd.Dir = filepath.Join(b.projectPath(), step.Dir)
 	cmd.Env = []string{
+		fmt.Sprintf("GO111MODULE=%s", os.Getenv("GO111MODULE")),
 		fmt.Sprintf("GOPATH=%s", b.GoPath),
 		fmt.Sprintf("PWD=%s", cmd.Dir),
 		fmt.Sprintf("PATH=%s", os.Getenv("PATH")),

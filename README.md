@@ -11,11 +11,9 @@ Functionality provided:
 * Generic server execution
 * Repository cache management
 
-The library should be imported using `gopkg.in`:
-
 ```go
 import (
-  "gopkg.in/src-d/regression-core.v0
+  "github.com/src-d/regression-core"
 )
 
 ...
