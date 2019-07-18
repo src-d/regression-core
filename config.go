@@ -44,7 +44,7 @@ func (c *Config) VersionPath(version string) string {
 	return filepath.Join(c.BinaryCache, version)
 }
 
-// VersionPath returns the binary path an specific version.
+// BinaryPath returns the binary path an specific version.
 func (c *Config) BinaryPath(version, name string) string {
 	return filepath.Join(c.VersionPath(version), name)
 }
@@ -55,8 +55,10 @@ type BuildStep struct {
 	Dir string
 	// Command is the executable to run.
 	Command string
-	// Args caintains the list of options to use with Command.
+	// Args contains the list of options to use with Command.
 	Args []string
+	// Env contains the list of environment variable to use with Command.
+	Env []string
 }
 
 // Tool describes a project to build and test.
@@ -76,10 +78,12 @@ type Tool struct {
 	ExtraFiles []string
 }
 
+// DirName returns the directory name for the tool in the given OS.
 func (t Tool) DirName(os string) string {
 	return fmt.Sprintf("%s_%s_amd64", t.Name, os)
 }
 
+// BinName returns the name of the binary.
 func (t Tool) BinName() string {
 	if t.BinaryName == "" {
 		return t.Name
