@@ -6,6 +6,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"regexp"
+	"runtime"
 	"strings"
 
 	"gopkg.in/src-d/go-errors.v1"
@@ -252,14 +253,14 @@ func (b *Build) checkBinary(hash string) (bool, error) {
 func (b *Build) buildStep(step BuildStep) error {
 	cmd := exec.Command(step.Command, step.Args...)
 	cmd.Dir = filepath.Join(b.projectPath(), step.Dir)
-	cmd.Env = []string{
+	cmd.Env = append(step.Env, []string{
 		fmt.Sprintf("GO111MODULE=%s", os.Getenv("GO111MODULE")),
 		fmt.Sprintf("GOPATH=%s", b.GoPath),
 		fmt.Sprintf("PWD=%s", cmd.Dir),
 		fmt.Sprintf("PATH=%s", os.Getenv("PATH")),
 		fmt.Sprintf("HOME=%s", os.Getenv("HOME")),
-		"PKG_OS=linux",
-	}
+		"PKG_OS=" + runtime.GOOS,
+	}...)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
