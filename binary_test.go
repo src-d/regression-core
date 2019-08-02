@@ -26,9 +26,9 @@ func TestBinary(t *testing.T) {
 		ok       bool
 	}{
 		{
-			version:  "v0.18.0",
-			binSize:  39535564,
-			yamlSize: 3936,
+			version:  "v0.23.1",
+			binSize:  42178428,
+			yamlSize: 5007,
 			ok:       true,
 		},
 		{
