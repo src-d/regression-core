@@ -27,7 +27,7 @@ func TestBinary(t *testing.T) {
 	}{
 		{
 			version:  "v0.23.1",
-			binSize:  42178428,
+			binSize:  42596563,
 			yamlSize: 5007,
 			ok:       true,
 		},
