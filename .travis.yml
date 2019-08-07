@@ -6,7 +6,7 @@ go:
   - 1.11.x
 
 env:
-  - GO111MODULE=on
+  - GO111MODULE=on GOPROXY=https://proxy.golang.org
 
 go_import_path: github.com/src-d/regression-core
 
