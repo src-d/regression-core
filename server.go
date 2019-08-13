@@ -18,12 +18,15 @@ func NewServer() *Server {
 }
 
 // Start executes a command in background.
-func (s *Server) Start(name string, arg ...string) error {
+func (s *Server) Start(name string, envs map[string]string, arg ...string) error {
 	s.cmd = exec.Command(name, arg...)
 	s.cmd.Stdout = os.Stdout
 	s.cmd.Stderr = os.Stderr
 	s.cmd.SysProcAttr = &syscall.SysProcAttr{
 		Setpgid: true,
+	}
+	for k, v := range envs {
+		s.cmd.Env = append(s.cmd.Env, k+"="+v)
 	}
 
 	err := s.cmd.Start()

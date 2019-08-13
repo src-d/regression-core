@@ -23,7 +23,7 @@ func (s *GitServer) Start() error {
 	arg := []string{"daemon", basePath, port,
 		"--export-all", s.config.RepositoriesCache}
 
-	return s.Server.Start("git", arg...)
+	return s.Server.Start("git", nil, arg...)
 }
 
 func (s *GitServer) Url(name string) string {
