@@ -15,11 +15,10 @@ func TestRepositories(t *testing.T) {
 	require.NoError(err)
 	defer os.RemoveAll(tmpDir)
 
-	config := NewConfig()
-	require.NotNil(config)
-
-	config.RepositoriesCache = tmpDir
-	config.Complexity = 0
+	config := GitServerConfig{
+		RepositoriesCache: tmpDir,
+		Complexity:        0,
+	}
 
 	repos, err := NewRepositories(config)
 	require.NotNil(repos)
@@ -70,13 +69,12 @@ description
 }
 
 func TestRepositoriesYaml(t *testing.T) {
-	require := require.New(t)
-
-	config := NewConfig()
-	config.RepositoriesFile = "testdata/repositories.yaml"
+	config := GitServerConfig{
+		RepositoriesFile: "testdata/repositories.yaml",
+	}
 	r, err := NewRepositories(config)
-	require.NoError(err)
-	require.NotNil(r)
+	require.NoError(t, err)
+	require.NotNil(t, r)
 
-	require.Equal(repositoriesExamples, r.Repos)
+	require.Equal(t, repositoriesExamples, r.Repos)
 }

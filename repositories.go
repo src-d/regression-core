@@ -61,13 +61,13 @@ var defaultRepos = []RepoDescription{
 // functionality to download them.
 type Repositories struct {
 	Repos  []RepoDescription
-	config Config
+	config GitServerConfig
 }
 
 // NewRepositories creates a new Repositories set. If config.RepositoriesFile
 // is set it will try to load it and use as a load it as the repositories
 // list.
-func NewRepositories(config Config) (*Repositories, error) {
+func NewRepositories(config GitServerConfig) (*Repositories, error) {
 	repos := defaultRepos
 
 	if config.RepositoriesFile != "" {

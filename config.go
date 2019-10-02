@@ -14,22 +14,38 @@ type Config struct {
 	OS string
 	// BinaryCache is the path to the binaries cache
 	BinaryCache string `env:"REG_BINARIES" default:"binaries" long:"binaries" description:"Directory to store binaries"`
-	// RepositoriesCache is the path to the downloaded repositories
-	RepositoriesCache string `env:"REG_REPOS" default:"repos" long:"repos" description:"Directory to store repositories"`
 	// GitURL is the git repository url to download the tool
 	GitURL string `env:"REG_GITURL" default:"" long:"url" description:"URL to the tool repo"`
-	// GitServerPort is the port where the local git server will listen
-	GitServerPort int `env:"REG_GITPORT" default:"9418" long:"gitport" description:"Port for local git server"`
-	// RepositoriesFile
-	RepositoriesFile string `env:"REG_REPOS_FILE" default:"" long:"repos-file" description:"YAML file with the list of repos"`
-	// Complexity has the max number of complexity of repos to test
-	Complexity int `env:"REG_COMPLEXITY" default:"1" long:"complexity" short:"c" description:"Complexity of the repositories to test"`
 	// Repeat is the number of times each test will be run
 	Repeat int `env:"REG_REPEAT" default:"3" long:"repeat" short:"n" description:"Number of times a test is run"`
 	// ShowRepos when --show-repos is specified
 	ShowRepos bool `long:"show-repos" description:"List available repositories to test"`
 	// GitHubToken specifies the token to use to use GitHub API
 	GitHubToken string `env:"REG_TOKEN" long:"token" short:"t" description:"Token used to connect to the API"`
+}
+
+// GitServerConfig holds the configuration for GitServer
+type GitServerConfig struct {
+	// GitServerPort is the port where the local git server will listen
+	GitServerPort int `env:"REG_GITPORT" default:"9418" long:"gitport" description:"Port for local git server"`
+	// RepositoriesFile
+	RepositoriesFile string `env:"REG_REPOS_FILE" default:"" long:"repos-file" description:"YAML file with the list of repos"`
+	// RepositoriesCache is the path to the downloaded repositories
+	RepositoriesCache string `env:"REG_REPOS" default:"repos" long:"repos" description:"Directory to store repositories"`
+	// Complexity has the max number of complexity of repos to test
+	Complexity int `env:"REG_COMPLEXITY" default:"1" long:"complexity" short:"c" description:"Complexity of the repositories to test"`
+}
+
+// CIConfig is config that represents CI build metadata, values of CIConfig will be added to metrics as labels
+type CIConfig struct {
+	Branch string `env:"GIT_BRANCH" default:"" long:"ci-branch" description:"branch env"`
+	Commit string `env:"GIT_COMMIT" default:"" long:"ci-commit" description:"commit env"`
+}
+
+// PromConfig contains prometheus pushgateway configuration info
+type PromConfig struct {
+	Address string `env:"PROM_ADDRESS" default:"" long:"prom-address" description:"prometheus pushgateway address"`
+	Job     string `env:"PROM_JOB" default:"" long:"prom-job" description:"prometheus job"`
 }
 
 // NewConfig returns an empty config with initialized OS.
