@@ -6,10 +6,10 @@ import (
 
 type GitServer struct {
 	*Server
-	config Config
+	config GitServerConfig
 }
 
-func NewGitServer(config Config) *GitServer {
+func NewGitServer(config GitServerConfig) *GitServer {
 	return &GitServer{
 		Server: NewServer(),
 		config: config,

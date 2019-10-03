@@ -33,9 +33,10 @@ func TestServer(t *testing.T) {
 	gopath, err := getGopath()
 	require.NoError(err)
 
-	config := NewConfig()
-	config.RepositoriesCache = fmt.Sprintf("%s/src/github.com/src-d", gopath)
-	config.GitServerPort = 9418
+	config := GitServerConfig{
+		RepositoriesCache: fmt.Sprintf("%s/src/github.com/src-d", gopath),
+		GitServerPort:     9418,
+	}
 
 	server := NewGitServer(config)
 
