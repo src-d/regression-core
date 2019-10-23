@@ -15,7 +15,7 @@ import (
 	"gopkg.in/src-d/go-log.v1"
 )
 
-var regRelease = regexp.MustCompile(`^v\d+\.\d+\.\d+$`)
+var regRelease = regexp.MustCompile(`^v\d+\.\d+\.\d+`)
 
 // ErrBinaryNotFound is returned when the executable is not found in
 // the release tarball.
